@@ -1,7 +1,12 @@
 import "./App.css";
+import Effect from "./reacthooks/useEffect/Effect";
 
 function App() {
-  return <div>Hello World!</div>;
+  return (
+    <div>
+      <Effect />
+    </div>
+  );
 }
 
 export default App;

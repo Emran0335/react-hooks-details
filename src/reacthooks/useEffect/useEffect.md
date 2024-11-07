@@ -26,7 +26,7 @@ The cleanup function is returned by the effect function, and React calls before 
 
 ## 2. When and How to Use useEffect
 
-- a. Fetching Data(API Calls)
+- a). Fetching Data(API Calls)
   To fetch data after a component mounts, we can use useEffect with an empty dependency array ([]). This ensures tha API call only happens once.
   JavaScript
 
@@ -50,7 +50,7 @@ function UserList() {
 }
 ```
 
-- b. Listening for Window Events
+- b). Listening for Window Events
   useEffect is useful for adding event listeners, like listening to window resize events. Here we will also need cleanup function to remove the lisener to prevent memory leaks.
 
 JavaScript
@@ -70,5 +70,36 @@ function WindowWidth() {
             window.removeEventListener('resize', handleResize)
         }
     }, []) // Only run once on mount
+}
+```
+
+- c). Dependent Side Effects
+  We might want to re-run an effect when specific state or props change. This can be useful in cases like filtering a list or changing data based on user input.
+
+JavaScript
+
+```
+import {useEffect, useState} from "react";
+
+function SearchUsers({searchTerm}) {
+    const [results, setResults] = useState([]);
+
+    useEffect(()=>{
+        if(searchTerm === "") {
+            setResults([]);
+            return;
+        }
+
+        fetch(`https://jsonplaceholder.typicode.com/users?name_like=${searchTerm}`)
+            .then((response)=> response.json())
+            .then((data)=> setResults(data))
+            .catch((error)=> console.error("Error fetching data: ", error))
+    }, [searchTerm]) // Runs every time 'SearchTerm' changes
+
+    return (
+        <ul>
+            {results.map(user=> <li key={user.id}>{user.name}</li>)}
+        </ul>
+    )
 }
 ```
